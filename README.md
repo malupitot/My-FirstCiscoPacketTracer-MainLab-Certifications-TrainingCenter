@@ -1,230 +1,172 @@
-# My First Main Lab Project Practice
+# My 1st Main Lab Project Practice
 
-This is my first major Cisco Packet Tracer project outside of regular laboratory exercises. Although it has limited features and lacks several advanced security and traffic control protocols found in production environments, it is the best networking project I have built so far. I am far from being an expert, but I believe I am making steady progress with every project.
-
----
-
-# Certification & Training Center LAN/WAN Infrastructure
-
-## 1. Project Overview
-
-The goal of this project is to simulate the network infrastructure of a small-to-medium Certification & Training Center company. It demonstrates the implementation of a network that is intended to be secure, scalable, and highly available while supporting multiple departments, centralized services, and reliable communication.
-
-Although this project is only a simulation, it attempts to reflect real-world enterprise networking concepts such as redundancy, segmentation, routing, and security. I understand that production environments involve far more complex requirements, stricter security policies, and additional technologies beyond what is implemented here.
+This is my first main project working with Cisco Packet Tracer, apart from regular lab exercises. Though limited features and lacking in more security and traffic control/flow protocols, I'd say this is the best output I've worked with so far. Not an expert, but definitely learning progressively.
 
 ---
 
-## 2. Objectives
+# Certification/Training Center LAN & WAN
 
-* Design a scalable campus network for multiple departments.
-* Implement redundancy and high availability.
-* Explore Zero Trust concepts using ACLs and firewall policies.
-* Simulate Internet (Cloud) connectivity.
-* Explore networking protocols and enterprise design practices.
+## 1. OVERVIEW
+
+This project I aimed to simulate a small-to-medium business/company, that is Certifications & Training Center Company. This mainly demonstrates implementations of design that is "supposed to be" secure, scalable and highly available enterprise network. This is only a simulation of the real thing, but makes use of multiple departments, connectivity, services and communication while maintaining fault tolerance, just like in real-world business. However, I do understand it's much more harsh, stricter than this project.
 
 ---
 
-## 3. Logical Topology
+## 2. MY OBJECTIVES
 
-The network follows a **Hierarchical Campus Network Design** using a **Collapsed Core Architecture**.
-
-The **SW8-CORE** switch serves as the centralized Layer 3 routing and distribution device for all access switches. On the WAN side, the design demonstrates Internet connectivity, gateway redundancy through HSRP, firewall security policies, NAT, and ISP connectivity.
-
-Each laboratory VLAN contains only one PC for simulation purposes. In a real deployment, each lab would represent multiple client devices, but using a single PC per VLAN keeps the topology manageable while still demonstrating the intended functionality.
-
----
-
-# 4. Network Devices, Concepts, Protocols & Features
-
-## A. Access Layer Switches
-
-### Description
-
-* Consists of eight Layer 2 access switches (seven internal and one external).
-* Each switch represents a single laboratory VLAN.
+- Design scalable campus network(departments)
+- Redundancy/Availability
+- Try to implement Zero-Trust network security using ACL + Firewall
+- Simulate internet(Cloud) connectivity
+- Explore possible protocols/policies I can use
 
 ---
 
-## B. Core Layer Switch
+## 3. LOGICAL TOPOLOGY
 
-### Description
+The company's network design uses Hierarchal Campus network design using Collapsed-core. As you can see, the SW8-CORE acts as the centralized routing and distribution point for all access layer switches. On the WAN side, it shows WAN connectivity, security and redundancy using HSRP protocols, Firewall Policies, and ISP connectivity.
 
-* Acts as the central Layer 3 routing and distribution device.
-* Performs Inter-VLAN Routing.
-* Centralizes ACL implementation instead of configuring ACLs on every Layer 2 switch.
-
-### Current Limitations
-
-The Core Switch acts as the aggregation point for every access switch. While it functions correctly in this topology, a production environment would normally include a second Layer 3 core switch to improve scalability, eliminate bottlenecks, and remove single points of failure—particularly on the WAN-facing side.
+Noticably, each Lab VLAN only contains 1 PC each. Normally, I would show at least 5-10 to represent a Lab Room but it's simply just to represent and wouldn't change anything regardless.
 
 ---
 
-## C. Access Control Lists (ACLs)
+## 4. NETWORK DEVICES/CONCEPTs/PROTOCOLS/FEATURES
 
-### Description
+### a. Access Layer Switches
 
-ACLs were configured to control communication between VLANs.
+**DESCRIPTION**
 
-* VLANs 10, 20, 30, and 40 are allowed access to the LMS and FTP servers through specific services.
-* VLAN 50 is restricted from accessing other networks except its own default gateway.
-* VLAN 90 is permitted to access only the FTP service.
-* Internal clients receive IP addresses through DHCP.
-* DNS allows authorized users to access internal services using domain names instead of IP addresses.
-
-### Current Limitations
-
-One configuration issue I have not fully resolved is that removing a permit statement from the ACL still allows traffic because it eventually matches the final:
-
-`permit ip any any`
-
-statement.
-
-This is an area I continue to study to better understand ACL processing and policy design.
+- Consists of 8 Layer 2 Access Switches (7 from Internal, 1 from External)
+- Each switch handles EXACTLY 1 VLAN represented as a Lab Room
 
 ---
 
-## D. Firewall
+### b. Core Layer Switch
 
-### Description
+**DESCRIPTION**
 
-The firewall separates the internal and external networks using security levels.
+- Right now, it is the central routing and distribution device and allows for interVLAN communication.
+- It is also where the ACL rules are implemented, not in each Layer 2 switch.
 
-* Inside Interface — Security Level **100**
-* Outside Interface — Security Level **0**
+**FLAW/s**
 
-Current inbound firewall policy:
-
-**Permitted**
-
-* ICMP Echo Replies
-* ICMP Error Messages responding to internal hosts
-
-**Denied**
-
-* All other unsolicited inbound traffic
-
-### Current Limitations
-
-While learning more about enterprise security, I realized this implementation does not fully follow a Zero Trust approach.
-
-Instead of assuming outbound traffic is trusted, a stricter implementation should validate and inspect both inbound and outbound communications according to least-privilege principles.
+- It is noticable that it is an aggregation point for all access switches and can handle, but in terms of scalability measures, I do acknowledge that it does need another Layer 3 switch to pair with to reduce bottlenecking, especially towards the interface of WAN side. That WAN interface remains a single point of failure in the instance that interface goes down. However, I will hold it off for now.
 
 ---
 
-## E. HSRP Routers & NAT
+### c. ACL
 
-### Description
+**DESCRIPTION**
 
-The HSRP routers provide gateway redundancy while also performing NAT before traffic exits toward the simulated Internet.
+- As seen in "ACLRules.PNG", it is designed to allow interVLAN traffic in very specific ways.
+- VLANs 10,20,30,40 are allowed to access the LMS &FTP Servers via Web or IP.
+- VLAN 50 is NOT ALLOWED any access except its own gateway.
+- VLAN 90, on the other hand, is only allowed FTP service.
+- All internal network VLAN PCs are serviced with DHCP IPs, and allowed those who are allowed to access using domain names, especially for LMS & FTP.
+- That's it for the internal network rules.
 
-This design allows private internal addresses to be translated into public addresses while maintaining high availability.
+**FLAW/s**
 
-### Current Limitations
-
-A significant issue identified during project evaluation was that if the Active HSRP router loses its connection to the ISP, it continues to remain the Active gateway because the LAN interface participating in HSRP is still operational.
-
-As a result, client traffic continues to be forwarded to the Active router even though it no longer has Internet connectivity.
-
-Based on feedback from our professor, a better implementation would use **HSRP Interface Tracking**, allowing the router to monitor its upstream interface. If that interface fails, the router automatically lowers its HSRP priority, allowing the Standby router to become the Active gateway and preventing traffic blackholing.
-
----
-
-## F. ISP Routers
-
-### Description
-
-Separate ISP routers were included to better simulate a real-world deployment.
-
-Rather than connecting enterprise routers directly to the Internet, organizations typically connect to ISP-owned routers. NAT is therefore implemented on the enterprise HSRP routers before traffic reaches the ISP infrastructure.
+- However, one major misconfiguration I have not been able to figure out yet is that once I remove a single line from the Access List, the connection of that line still works since it's being catched and accomodated with by the last line "permit ip any any" and is not denied.
 
 ---
 
-## G. Cloud Interfaces
+### d. Firewall
 
-### Description
+**DESCRIPTION**
 
-The Cloud devices serve only as simulated transmission media.
+- The policy includes treating any internal network traffic to have the HIGHEST security level of 100, trusting traffic to come from INSIDE to OUTSIDE.
+- On the other hand, incoming outside traffic is considered security level of 0.
 
-Their purpose is to bridge Ethernet connectivity toward the DSL modem and simulate Internet infrastructure.
+The main ACL rules for OUTSIDE incoming traffic are the following:
 
----
+**PERMIT**
 
-## H. DSL Modem
+- If a packet is an echo-reply/error messages replying to INTERNAL
 
-### Description
+**DENY**
 
-The modem forwards traffic between Ethernet and telephone connections by converting Ethernet frames into signals suitable for transmission over telephone lines.
+- EVERYTHING ELSE
 
----
+**FLAW**
 
-## I. External Network
-
-### Description
-
-The external network represents the Certification Authority or certifying organization's infrastructure.
-
-It contains external services that students may access after completing their certification requirements.
-
-A DNS server was also included so internal users can access services using domain names instead of manually entering IP addresses.
+- The goal of Zero-Trust network is that treat both INCOMING and OUTCOMING traffic with ZERO TRUST and must be treated as unsecured as I've learned from real-world businesses. I didn't realize that until I thoroughly checked and got advice from my professor.
 
 ---
 
-# 5. Future Improvements
+### e. HSRP Routers + NAT
 
-## A. Remove Single Points of Failure
+**DESCRIPTION**
 
-Improve redundancy between:
+- NAT was configured on the 2 HSRP routers instead since they are leaving the network towards Cloud to convert internal IP addresses to a public one.
+- ACL Rules also applied here.
 
-* Core Switch
-* Firewall
-* WAN Infrastructure
+**FLAW**
 
----
-
-## B. Improve Simulation Realism
-
-This project focuses primarily on logical network design.
-
-Future improvements include:
-
-* Physical topology considerations
-* Realistic hardware deployment
-* Live attack simulations
-* Link failures
-* Performance testing
+- Another major flaw is that the Active Router is currently on preempt, but once the interface towards the ISP router is down, an outcoming packet will still go to the Active Router despite the next interface being down.
+- One feedback I got from our professor is that recommended Interface Tracking allowing to monitor the status of its own upstream interface, in which if it doesn't it automatically lowers its HSRP priority and allow the Standby Router to assume Active role.
 
 ---
 
-## C. Improve Redundancy
+### f. ISP Routers
 
-Instead of relying entirely on dual links protected by STP, future versions could implement EtherChannel where appropriate.
+**DESCRIPTION**
 
-Due to Packet Tracer limitations on supported port channels, a hybrid approach could be adopted:
-
-* EtherChannel for laboratory access switches
-* STP-protected redundant links where EtherChannel is impractical
-
-Firewall redundancy could also be implemented.
+- The reason there is a separate router between the HSRP Routers and the Cloud interfaces is since we're simulating a real-world implementation.
+- HSRP routers don't directly connect immediately to the internet, instead connect to ISP Routers that are NOT OWNED by the company, also the reason why the NAT is configured on HSRP Routers instead.
 
 ---
 
-## D. Expand Security & Monitoring
+### g. Cloud Interfaces
 
-Future versions may include:
+**DESCRIPTION**
 
-* Intrusion Detection/Prevention Systems (IDS/IPS)
-* Centralized logging
-* SIEM integration
-* AAA services
-* Network monitoring
-* Additional enterprise security controls
+- These are simulated mediums instead and don't have addressed interfaces.
+- All I configured in this interface is add connection between Modem to Ethernet interfaces.
+- It will bridge connection between ISP Routers and the DSL Modem.
 
 ---
 
-# Takeaways
+### h. Modem
 
-Working on this project taught me that designing an enterprise network involves much more than simply connecting devices together. High availability, redundancy, scalability, and security all require careful planning and consideration.
+**DESCRIPTION**
 
-While this simulation only represents a small portion of what exists in production environments, it has given me a stronger understanding of enterprise networking concepts and highlighted areas where I still have much to learn.
+- Like a hub, simply forward traffic but translates Ethernet frames from the EXTERNAL network and converts it to suiitable signal over the Telephone cable.
 
-As I continue studying networking and cybersecurity, I plan to improve this project by incorporating more advanced technologies, better security practices, and more realistic enterprise designs.
+---
+
+### i. External Network
+
+**DESCRIPTION**
+
+- As I have said before, the External Network represents the certifying body's network server where students get certificates from after confiriming their progress, or at least that's the concept of it.
+- A DNS Server was also added so that PCs from Lab VLANs can access the domain instead of manual IP address.
+
+---
+
+## 5. FUTURE IMPROVEMENTS
+
+### a. Single Points of Failure
+
+- Exists in Interfaces between SW8-Core and Firewall and the rest of the WAN side.
+
+### b. Simulation Environment
+
+- It's not validated against real-world operation conditions especially I mainly focused on the logical side, not the physical topology side.
+- No live attacks, failovers, physical issues can be tested on this simulation.
+
+### c. EtherChannel instead of Dual-Link / Availability Issues
+
+- Since each Layer 3 switch can only accomodate 6 port channels in which case in our topology, we have more than that.
+- However, it is considerable to know that the VLAN Labs are better off EtherChanneled and the rest of the ports are normal STP-based dual links instead to at least demonstrate its use for higher availability.
+- The same can be said for Firewall redundancy.
+
+### d. Adopt more advanced Security/Monitoring solutions
+
+---
+
+# TAKEAWAYS
+
+As I work through my project until I create this write-up I learned there are a lot more things to be considered when making network system design, especially for higher scale enterprise networks where downtime is crucial, availability is of highest priority, and security should be innegligible.
+
+This simulation is only surface-level compared to real network systems, so I plan to upskill and practice and learn more as I go through.
